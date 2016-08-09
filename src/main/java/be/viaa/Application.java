@@ -1,5 +1,8 @@
 package be.viaa;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Properties;
 
 import be.viaa.amqp.AmqpPulseService;
@@ -23,12 +26,22 @@ public class Application {
 	public static void main(String[] args) throws Exception {
 		System.out.println("Starting application...");
 		
+		/*
+		 * Read the properties file
+		 */
+		String properties_file = args.length == 2 && args[0].equals("-p") ? args[1] : "./application.properties";
 		Properties properties = new Properties();
-		properties.load(ClassLoader.getSystemResourceAsStream("application.properties"));
-
-		String host = properties.getProperty("mq.rabbit.host");
-		String username = properties.getProperty("mq.rabbit.username");
-		String password = properties.getProperty("mq.rabbit.password");
+		properties.load(new FileReader(new File(properties_file)));
+		String host = properties.getProperty("host");
+		String username = properties.getProperty("username");
+		String password = properties.getProperty("password");
+		
+		/*
+		 * If there is no host specified, exit the program
+		 */
+		if (host == null || host.equals("")) {
+			throw new IOException("no host specified");
+		}
 		
 		try {
 			AmqpService service = new RabbitMQService(host, username, password);
