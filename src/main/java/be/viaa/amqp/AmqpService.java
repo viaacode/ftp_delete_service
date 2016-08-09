@@ -9,6 +9,11 @@ import java.io.IOException;
  *
  */
 public interface AmqpService {
+	
+	/**
+	 * Initializes the queue
+	 */
+	void initialize() throws Exception;
 
 	/**
 	 * 

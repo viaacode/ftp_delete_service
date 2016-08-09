@@ -45,8 +45,12 @@ public class RabbitMQService implements AmqpService {
 	public RabbitMQService(String host, String username, String password) throws TimeoutException, IOException {
 		this.factory = new ConnectionFactory();
 		this.factory.setHost(host);
-		this.factory.setUsername(username);
-		this.factory.setPassword(password);
+		
+		if (username != null && !username.equals("")) {
+			this.factory.setUsername(username);
+			this.factory.setPassword(password);
+		}
+		
 		this.connection = factory.newConnection();
 	}
 
@@ -60,14 +64,12 @@ public class RabbitMQService implements AmqpService {
 		this.connection = factory.newConnection();
 	}
 	
-	/**
-	 * Gets a new channel from 
-	 * @return
-	 * @throws IOException
-	 * @throws TimeoutException
-	 */
-	private final Channel channel() throws IOException {
-		return connection.createChannel();
+	@Override
+	public void initialize() throws Exception {
+		Channel channel = this.channel();
+
+		channel.queueDeclare("delete_requests", true, false, false, null);
+		channel.queueDeclare("delete_responses", true, false, false, null);
 	}
 
 	@Override
@@ -82,8 +84,19 @@ public class RabbitMQService implements AmqpService {
 		this.channel().basicPublish("", queue, null, data);
 	}
 
+	@Override
 	public String toString() {
 		return "Rabbit MQ (host: " + this.factory.getHost() + ":" + this.factory.getPort() + ")";
+	}
+	
+	/**
+	 * Gets a new channel from 
+	 * @return
+	 * @throws IOException
+	 * @throws TimeoutException
+	 */
+	private final Channel channel() throws IOException {
+		return connection.createChannel();
 	}
 
 }

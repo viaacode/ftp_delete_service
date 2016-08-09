@@ -45,9 +45,10 @@ public class Application {
 		
 		try {
 			AmqpService service = new RabbitMQService(host, username, password);
-	//		AmqpService service = new RabbitMQService("localhost");
 			AmqpPulseService poller = new AmqpPulseService(service);
 	
+			service.initialize();
+			
 			poller.addListener("delete_requests", new DeleteServiceConsumer());
 			poller.start();
 		} catch (Exception ex) {

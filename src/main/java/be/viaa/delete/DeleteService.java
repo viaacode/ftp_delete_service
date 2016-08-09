@@ -21,7 +21,6 @@ public class DeleteService {
 		FTPClient client = new FTPClient();
 
 		try {
-			System.out.println(file);
 			/*
 			 * Connect to the FTP server that hosts the source file
 			 */
