@@ -1,1 +1,0 @@
-Fat JAR: mvn clean compile assembly:single

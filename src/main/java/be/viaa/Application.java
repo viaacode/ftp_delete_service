@@ -26,9 +26,9 @@ public class Application {
 		Properties properties = new Properties();
 		properties.load(ClassLoader.getSystemResourceAsStream("application.properties"));
 
-		String host = properties.getProperty("host");
-		String username = properties.getProperty("username");
-		String password = properties.getProperty("password");
+		String host = properties.getProperty("mq.rabbit.host");
+		String username = properties.getProperty("mq.rabbit.username");
+		String password = properties.getProperty("mq.rabbit.password");
 		
 		try {
 			AmqpService service = new RabbitMQService(host, username, password);
