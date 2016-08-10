@@ -44,7 +44,6 @@ public class RabbitMQConsumer extends DefaultConsumer {
 			consumer.accept(service, body);
 			consumer.success(service, body);
 		} catch (Exception exception) {
-			exception.printStackTrace();
 			consumer.exception(service, exception, body);
 		}
 	}

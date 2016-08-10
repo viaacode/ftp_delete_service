@@ -1,5 +1,11 @@
 package be.viaa.fxp.amqp;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -34,9 +40,33 @@ public class DeleteResponse {
 	private String status;
 	
 	/**
-	 * The host of the FTP server
+	 * Collection of exceptions
 	 */
-	private String host;
+	private List<String> messages;
+
+	/**
+	 * 
+	 * @param messages
+	 */
+	public void setMessages(List<Exception> messages) {
+		for (Exception exception : messages) {
+			addMessage(exception);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param exception
+	 */
+	public void addMessage(Exception exception) {
+		if (messages == null) {
+			messages = new ArrayList<>();
+		}
+		
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		exception.printStackTrace(new PrintStream(baos));
+		messages.add(new String(baos.toByteArray(), StandardCharsets.UTF_8));
+	}
 
 	/**
 	 * @return the filename
@@ -81,20 +111,6 @@ public class DeleteResponse {
 	}
 
 	/**
-	 * @return the host
-	 */
-	public String getHost() {
-		return host;
-	}
-
-	/**
-	 * @param host the host to set
-	 */
-	public void setHost(String host) {
-		this.host = host;
-	}
-
-	/**
 	 * @return the correlationId
 	 */
 	public String getCorrelationId() {
@@ -106,6 +122,14 @@ public class DeleteResponse {
 	 */
 	public void setCorrelationId(String correlationId) {
 		this.correlationId = correlationId;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public List<String> getMessages() {
+		return messages;
 	}
 
 }

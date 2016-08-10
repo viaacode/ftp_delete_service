@@ -10,6 +10,8 @@ import java.util.Map.Entry;
 /**
  * Periodically checks to see if there are new messages available on the queue
  * 
+ * TODO: Name does not describe its job anymore, need better name
+ * 
  * @author Hannes Lowette
  *
  */
@@ -50,6 +52,7 @@ public class AmqpPulseService {
 				}
 			}
 		} catch (Exception ex) {
+			System.out.println("Could not start the AMQP service");
 			ex.printStackTrace();
 		}
 	}

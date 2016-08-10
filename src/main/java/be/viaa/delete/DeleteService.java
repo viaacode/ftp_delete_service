@@ -17,7 +17,15 @@ import be.viaa.delete.model.Host;
  */
 public class DeleteService {
 
-	public void delete(File file, Host host) throws IOException {
+	/**
+	 * 
+	 * @param file
+	 * @param host
+	 * @throws IOException
+	 */
+	public void delete(File file, Host host) throws Exception {
+		System.out.println("attempting to delete file '" + file.getDirectory() + "/" + file.getName() + "'");
+		
 		FTPClient client = new FTPClient();
 
 		try {
@@ -54,9 +62,10 @@ public class DeleteService {
 			 * Delete the file from the remote FTP server and return the OK status when successful
 			 */
 			client.deleteFile(file.getName());
-		} catch (IOException ex) {
-			// TODO: Connection to the FTP server has gone wrong
-			ex.printStackTrace();
+			System.out.println("successfully deleted file '" + file.getDirectory() + "/" + file.getName() + "'");
+		} catch (Exception ex) {
+			System.out.println("could not delete file '" + file.getDirectory() + "/" + file.getName() + "' - " + ex.getMessage());
+			throw ex;
 		} finally {
 			client.disconnect();
 		}

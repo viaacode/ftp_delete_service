@@ -32,9 +32,9 @@ public class Application {
 		String properties_file = args.length == 2 && args[0].equals("-p") ? args[1] : "./application.properties";
 		Properties properties = new Properties();
 		properties.load(new FileReader(new File(properties_file)));
-		String host = properties.getProperty("host");
-		String username = properties.getProperty("username");
-		String password = properties.getProperty("password");
+		String host = properties.getProperty("mq.rabbit.host");
+		String username = properties.getProperty("mq.rabbit.username");
+		String password = properties.getProperty("mq.rabbit.password");
 		
 		/*
 		 * If there is no host specified, exit the program

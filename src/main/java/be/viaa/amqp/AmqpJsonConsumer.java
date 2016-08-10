@@ -9,7 +9,7 @@ import com.google.gson.Gson;
  *
  * @param <T>
  */
-public abstract class AmqpJsonConsumer<T> implements AmqpConsumer {
+public abstract class AmqpJsonConsumer<I> implements AmqpConsumer {
 
 	/**
 	 * The gson instance to convert POJO to JSON
@@ -19,12 +19,12 @@ public abstract class AmqpJsonConsumer<T> implements AmqpConsumer {
 	/**
 	 * The type
 	 */
-	private final Class<T> type;
+	private final Class<I> type;
 
 	/**
 	 * @param type
 	 */
-	public AmqpJsonConsumer(Class<T> type) {
+	public AmqpJsonConsumer(Class<I> type) {
 		this.type = type;
 	}
 
@@ -40,8 +40,8 @@ public abstract class AmqpJsonConsumer<T> implements AmqpConsumer {
 	 * @see be.viaa.amqp.AmqpConsumer#success(be.viaa.amqp.AmqpService, java.lang.byte[])
 	 */
 	@Override
-	public void success(AmqpService service, byte[] data) throws Exception {
-		this.success(service, gson.fromJson(new String(data), type));
+	public void success(AmqpService service, byte[] object) throws Exception {
+		this.success(service, gson.fromJson(new String(object), type));
 	}
 
 	/* (non-Javadoc)
@@ -58,7 +58,7 @@ public abstract class AmqpJsonConsumer<T> implements AmqpConsumer {
 	 * @param service
 	 * @param object
 	 */
-	protected abstract void accept(AmqpService service, T message) throws Exception;
+	protected abstract void accept(AmqpService service, I message) throws Exception;
 
 	/**
 	 * Called when the JSON message has been parsed into a POJO
@@ -66,7 +66,7 @@ public abstract class AmqpJsonConsumer<T> implements AmqpConsumer {
 	 * @param service
 	 * @param object
 	 */
-	protected abstract void success(AmqpService service, T message) throws Exception;
+	protected abstract void success(AmqpService service, I message) throws Exception;
 
 	/**
 	 * Called when the JSON message has been parsed into a POJO
@@ -74,6 +74,6 @@ public abstract class AmqpJsonConsumer<T> implements AmqpConsumer {
 	 * @param service
 	 * @param object
 	 */
-	protected abstract void exception(AmqpService service, Exception exception, T message);
+	protected abstract void exception(AmqpService service, Exception exception, I message);
 
 }

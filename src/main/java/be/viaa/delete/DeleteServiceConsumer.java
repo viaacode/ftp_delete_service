@@ -37,23 +37,26 @@ public class DeleteServiceConsumer extends AmqpJsonConsumer<DeleteRequest> {
 	}
 
 	@Override
-	public void success(AmqpService service, DeleteRequest message) throws Exception {
+	public void success(AmqpService service, DeleteRequest request) throws Exception {
 		DeleteResponse response = new DeleteResponse();
 		
-		response.setFilename(message.getFilename());
-		response.setDirectory(message.getPath());
+		response.setFilename(request.getFilename());
+		response.setDirectory(request.getPath());
 		response.setStatus("OK");
+		response.setCorrelationId(request.getCorrelationId());
 		
 		service.write("delete_responses", JsonConverter.convert(response));
 	}
 
 	@Override
-	public void exception(AmqpService service, Exception exception, DeleteRequest message) {
+	public void exception(AmqpService service, Exception exception, DeleteRequest request) {
 		DeleteResponse response = new DeleteResponse();
 
-		response.setFilename(message.getFilename());
-		response.setDirectory(message.getPath());
+		response.setFilename(request.getFilename());
+		response.setDirectory(request.getPath());
 		response.setStatus("NOK");
+		response.addMessage(exception);
+		response.setCorrelationId(request.getCorrelationId());
 		
 		try {
 			service.write("delete_responses", JsonConverter.convert(response));
