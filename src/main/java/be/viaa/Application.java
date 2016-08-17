@@ -5,6 +5,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import be.viaa.amqp.AmqpBatchService;
 import be.viaa.amqp.AmqpService;
 import be.viaa.amqp.rabbitmq.RabbitMQService;
@@ -17,6 +20,11 @@ import be.viaa.delete.DeleteServiceConsumer;
  *
  */
 public class Application {
+	
+	/**
+	 * The logger class for this application
+	 */
+	private static final Logger logger = LogManager.getLogger(Application.class);
 
 	/**
 	 * 
@@ -24,7 +32,7 @@ public class Application {
 	 * @throws Exception 
 	 */
 	public static void main(String[] args) throws Exception {
-		System.out.println("Starting application...");
+		logger.info("Starting application...");
 		
 		/*
 		 * Read the properties file
@@ -45,15 +53,16 @@ public class Application {
 		
 		try {
 			AmqpService service = new RabbitMQService(host, username, password);
-			AmqpBatchService poller = new AmqpBatchService(service);
+			AmqpBatchService batchService = new AmqpBatchService(service);
 
 			service.createIfNotExists("delete_requests");
 			service.createIfNotExists("delete_responses");
 			
-			poller.addListener("delete_requests", new DeleteServiceConsumer());
-			poller.start();
+			batchService.addListener("delete_requests", new DeleteServiceConsumer());
+			batchService.start();
 		} catch (Exception ex) {
-			System.out.println("Could not connect to the MQ server: " + ex.getMessage());
+			logger.fatal("Could not connect to the MQ server: " + ex.getMessage());
+			logger.catching(ex);
 		}
 	}
 
