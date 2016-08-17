@@ -2,11 +2,12 @@ package be.viaa.delete;
 
 import be.viaa.amqp.AmqpJsonConsumer;
 import be.viaa.amqp.AmqpService;
-import be.viaa.amqp.util.JsonConverter;
-import be.viaa.delete.model.File;
-import be.viaa.delete.model.Host;
+import be.viaa.fxp.File;
+import be.viaa.fxp.FxpFileTransporter;
+import be.viaa.fxp.Host;
 import be.viaa.fxp.amqp.DeleteRequest;
 import be.viaa.fxp.amqp.DeleteResponse;
+import be.viaa.util.GsonUtil;
 
 /**
  * AMQP consumer for FXP messages
@@ -19,7 +20,7 @@ public class DeleteServiceConsumer extends AmqpJsonConsumer<DeleteRequest> {
 	/**
 	 * The file transporter
 	 */
-	private final DeleteService transporter = new DeleteService();
+	private final FxpFileTransporter transporter = new FxpFileTransporter();
 
 	/**
 	 * Constructor to identify the class used in the JSON parser
@@ -45,7 +46,7 @@ public class DeleteServiceConsumer extends AmqpJsonConsumer<DeleteRequest> {
 		response.setStatus("OK");
 		response.setCorrelationId(request.getCorrelationId());
 		
-		service.write("delete_responses", JsonConverter.convert(response));
+		service.write("delete_responses", GsonUtil.convert(response));
 	}
 
 	@Override
@@ -59,7 +60,7 @@ public class DeleteServiceConsumer extends AmqpJsonConsumer<DeleteRequest> {
 		response.setCorrelationId(request.getCorrelationId());
 		
 		try {
-			service.write("delete_responses", JsonConverter.convert(response));
+			service.write("delete_responses", GsonUtil.convert(response));
 		} catch (Exception ex) {
 			// TODO: This exception needs to be monitored closely and logged pretty well, it means the queue
 			// TODO: is unreachable and this needs to be reported to inform that the RabbitMQ is down

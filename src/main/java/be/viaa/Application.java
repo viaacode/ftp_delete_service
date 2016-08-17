@@ -5,7 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
 
-import be.viaa.amqp.AmqpPulseService;
+import be.viaa.amqp.AmqpBatchService;
 import be.viaa.amqp.AmqpService;
 import be.viaa.amqp.rabbitmq.RabbitMQService;
 import be.viaa.delete.DeleteServiceConsumer;
@@ -29,9 +29,9 @@ public class Application {
 		/*
 		 * Read the properties file
 		 */
-		String properties_file = args.length == 2 && args[0].equals("-p") ? args[1] : "./application.properties";
+		String propertiesFile = args.length == 2 && args[0].equals("-p") ? args[1] : "./application.properties";
 		Properties properties = new Properties();
-		properties.load(new FileReader(new File(properties_file)));
+		properties.load(new FileReader(new File(propertiesFile)));
 		String host = properties.getProperty("mq.rabbit.host");
 		String username = properties.getProperty("mq.rabbit.username");
 		String password = properties.getProperty("mq.rabbit.password");
@@ -45,9 +45,10 @@ public class Application {
 		
 		try {
 			AmqpService service = new RabbitMQService(host, username, password);
-			AmqpPulseService poller = new AmqpPulseService(service);
-	
-			service.initialize();
+			AmqpBatchService poller = new AmqpBatchService(service);
+
+			service.createIfNotExists("delete_requests");
+			service.createIfNotExists("delete_responses");
 			
 			poller.addListener("delete_requests", new DeleteServiceConsumer());
 			poller.start();
