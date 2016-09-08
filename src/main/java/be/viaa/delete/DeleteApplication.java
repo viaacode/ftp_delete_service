@@ -1,4 +1,4 @@
-package be.viaa;
+package be.viaa.delete;
 
 import java.io.File;
 import java.io.FileReader;
@@ -11,7 +11,6 @@ import org.apache.logging.log4j.Logger;
 import be.viaa.amqp.AmqpBatchService;
 import be.viaa.amqp.AmqpService;
 import be.viaa.amqp.rabbitmq.RabbitMQService;
-import be.viaa.delete.DeleteServiceConsumer;
 
 /**
  * Contains the entry point of the application
@@ -19,12 +18,12 @@ import be.viaa.delete.DeleteServiceConsumer;
  * @author Hannes Lowette
  *
  */
-public class Application {
+public class DeleteApplication {
 	
 	/**
 	 * The logger class for this application
 	 */
-	private static final Logger logger = LogManager.getLogger(Application.class);
+	private static final Logger logger = LogManager.getLogger(DeleteApplication.class);
 
 	/**
 	 * 
@@ -53,13 +52,13 @@ public class Application {
 		
 		try {
 			AmqpService service = new RabbitMQService(host, username, password);
-			AmqpBatchService batchService = new AmqpBatchService(service);
+			AmqpBatchService batch = new AmqpBatchService(service);
 
 			service.createIfNotExists("delete_requests");
 			service.createIfNotExists("delete_responses");
 			
-			batchService.addListener("delete_requests", new DeleteServiceConsumer());
-			batchService.start();
+			batch.addListener("delete_requests", new DeleteServiceConsumer());
+			batch.start();
 		} catch (Exception ex) {
 			logger.fatal("Could not connect to the MQ server: " + ex.getMessage());
 			logger.catching(ex);

@@ -28,7 +28,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>be.viaa.Application</mainClass>
+							<mainClass>be.viaa.delete.DeleteApplication</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>
