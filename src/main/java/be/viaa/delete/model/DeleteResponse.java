@@ -1,4 +1,4 @@
-package be.viaa.fxp.amqp;
+package be.viaa.delete.model;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -15,6 +15,11 @@ import com.google.gson.annotations.SerializedName;
  *
  */
 public class DeleteResponse {
+
+	/**
+	 * The format in which the timestamp is shown
+	 */
+	public static final String TIMESTAMP_FORMAT = "yyyy-MM-dd HH:mm:ss,SSS";
 	
 	/**
 	 * The filename of the deleted file
@@ -38,6 +43,11 @@ public class DeleteResponse {
 	 * The status of the deletion (OK/NOK)
 	 */
 	private String status;
+
+	/**
+	 * The timestamp at which the response is created
+	 */
+	private String timestamp;
 	
 	/**
 	 * Collection of exceptions
@@ -130,6 +140,20 @@ public class DeleteResponse {
 	 */
 	public List<String> getMessages() {
 		return messages;
+	}
+
+	/**
+	 * @return the timestamp
+	 */
+	public String getTimestamp() {
+		return timestamp;
+	}
+
+	/**
+	 * @param timestamp the timestamp to set
+	 */
+	public void setTimestamp(String timestamp) {
+		this.timestamp = timestamp;
 	}
 
 }
