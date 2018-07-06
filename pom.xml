@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>be.viaa</groupId>
 	<artifactId>delete-service</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 
 	<properties>
 		<maven.compiler.target>1.8</maven.compiler.target>
@@ -17,7 +17,7 @@
 		<dependency>
 			<groupId>be.viaa</groupId>
 			<artifactId>fxp-service</artifactId>
-			<version>1.0.0</version>
+			<version>1.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.rabbitmq</groupId>
@@ -29,16 +29,26 @@
 	<build>
 		<plugins>
 			<plugin>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>be.viaa.delete.DeleteApplication</mainClass>
+							<addClasspath>true</addClasspath>
+							<mainClass>be.viaa.Application</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>
+					<appendAssemblyId>false</appendAssemblyId>
 				</configuration>
 			</plugin>
 		</plugins>
