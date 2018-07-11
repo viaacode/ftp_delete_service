@@ -28,11 +28,19 @@ An example response
 ```
 
 # Maven 
-To compile as fat jar
+This service depends on the FXP service [FXP service](https://github.com/viaacode/fxp_service), thus the VIAA nexus repo should be configured correctly.
 
-```
-mvn clean compile assembly:single
-```
+Then you can compile or build the move service regularly with a Maven command of you choice (package, compile, ...) like you normally would.
+
+`mvn package` creates the same 'fat' jar as `mvn clean compile assembly:single`. Build the project using one of the two following:
+
+- `mvn clean compile assembly:single`
+- `mvn clean package`
+
+Once built, the artifact can be deployed to the nexus, assuming credentials for the VIAA repo are set up correctly:
+- `mvn deploy`
+
+Consult the [`mvn deploy`](https://maven.apache.org/plugins/maven-deploy-plugin/usage.html) documentation.
 
 # Properties
 
